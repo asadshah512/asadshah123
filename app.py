@@ -1,7 +1,7 @@
 import streamlit as st
 from data import load_data
 from filters import get_category_filters
-from charts import plot_top_10_majors, plot_lowest_unemployment, plot_highest_share_women
+from charts import plot_top_10_majors, plot_lowest_unemployment, plot_gender_breakdown
 
 st.set_page_config(page_title="College Majors Dashboard", layout="centered")
 
@@ -36,7 +36,7 @@ st.markdown("---")
 plot_lowest_unemployment(filtered_df)
 st.markdown("---")
 
-plot_highest_share_women(filtered_df)
+plot_gender_breakdown(filtered_df)
 
 st.markdown("---")
 st.markdown("Data Source: [FiveThirtyEight College Majors Dataset](https://github.com/fivethirtyeight/data/tree/master/college-majors)")
