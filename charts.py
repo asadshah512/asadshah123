@@ -53,7 +53,6 @@ def plot_density_heatmap(filtered_df):
         marginal_x="histogram", 
         marginal_y="histogram",
         title="Heatmap: Concentration of Majors",
-        color_continuous_scale="Viridis",
         hover_data=['Major']
     )
     fig.update_layout(xaxis_title="Unemployment Rate", yaxis_title="Median Salary ($)")
