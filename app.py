@@ -1,14 +1,14 @@
 import streamlit as st
 from data import load_data
 from filters import get_category_filters
-from charts import plot_top_10_majors, plot_lowest_unemployment, plot_gender_breakdown
+from charts import plot_salary_histogram, plot_unemployment_violin, plot_gender_boxplot, plot_density_heatmap
 
 st.set_page_config(page_title="College Majors Dashboard", layout="centered")
 
 df = load_data()
 
 st.title("🎓 US College Majors Dashboard")
-st.markdown("A clear and simple look at earnings, job security, and demographics across college majors.")
+st.markdown("Advanced statistical analysis of earnings, job security, and demographics across college majors.")
 
 selected_category = get_category_filters(df)
 
@@ -29,14 +29,16 @@ col2.metric("Average Unemployment Rate", f"{avg_unemployment*100:.1f}%")
 
 st.markdown("---")
 
-# Visualizations in a vertical layout for easy reading
-plot_top_10_majors(filtered_df)
+plot_salary_histogram(filtered_df)
 st.markdown("---")
 
-plot_lowest_unemployment(filtered_df)
+plot_unemployment_violin(filtered_df)
 st.markdown("---")
 
-plot_gender_breakdown(filtered_df)
+plot_gender_boxplot(filtered_df)
+st.markdown("---")
+
+plot_density_heatmap(filtered_df)
 
 st.markdown("---")
 st.markdown("Data Source: [FiveThirtyEight College Majors Dataset](https://github.com/fivethirtyeight/data/tree/master/college-majors)")

@@ -1,55 +1,61 @@
 import streamlit as st
 import plotly.express as px
-import pandas as pd
 
-def plot_top_10_majors(filtered_df):
-    st.subheader("💰 Top 10 Highest Paying Majors (Treemap)")
-    top_10 = filtered_df.nlargest(10, 'Median')
-    
-    fig = px.treemap(
-        top_10,
-        path=[px.Constant("Majors"), 'Major'],
-        values='Median',
-        color='Median',
-        color_continuous_scale='Blues',
+def plot_salary_histogram(filtered_df):
+    st.subheader("💰 Salary Distribution (Histogram)")
+    fig = px.histogram(
+        filtered_df, 
+        x="Median", 
+        nbins=20, 
+        title="Distribution of Median Earnings",
+        color_discrete_sequence=['#1f77b4'],
+        marginal="box", # Adds a neat box plot on top!
+        hover_data=['Major']
     )
-    fig.update_traces(textinfo="label+value", texttemplate="%{label}<br>$%{value:,.0f}")
-    fig.update_layout(margin=dict(t=10, l=10, r=10, b=10))
+    fig.update_layout(xaxis_title="Median Salary ($)", yaxis_title="Number of Majors")
     st.plotly_chart(fig, use_container_width=True)
 
-def plot_lowest_unemployment(filtered_df):
-    st.subheader("🛡️ Top 10 Majors with Best Job Security (Lowest Unemployment)")
-    top_10_secure = filtered_df.nsmallest(10, 'Unemployment_rate').sort_values('Unemployment_rate', ascending=False)
-    
-    fig = px.bar(
-        top_10_secure, 
-        x='Unemployment_rate', 
-        y='Major', 
-        orientation='h',
-        text_auto='.1%',
-        color_discrete_sequence=['#2ca02c']
+def plot_unemployment_violin(filtered_df):
+    st.subheader("🛡️ Job Security Density (Violin Plot)")
+    fig = px.violin(
+        filtered_df, 
+        y="Unemployment_rate", 
+        box=True, 
+        points="all", 
+        title="Density of Unemployment Rates",
+        color_discrete_sequence=['#2ca02c'],
+        hover_data=['Major']
     )
-    fig.update_layout(xaxis_title="Unemployment Rate", yaxis_title="", showlegend=False)
-    fig.layout.xaxis.tickformat = ',.0%'
+    fig.update_layout(yaxis_title="Unemployment Rate", xaxis_title="")
+    fig.layout.yaxis.tickformat = ',.1%'
     st.plotly_chart(fig, use_container_width=True)
 
-def plot_gender_breakdown(filtered_df):
-    st.subheader("👩‍🎓 Overall Gender Breakdown")
-    total_men = filtered_df['Men'].sum()
-    total_women = filtered_df['Women'].sum()
-    
-    gender_data = pd.DataFrame({
-        'Gender': ['Men', 'Women'],
-        'Total': [total_men, total_women]
-    })
-    
-    fig = px.pie(
-        gender_data,
-        names='Gender',
-        values='Total',
-        hole=0.4,
-        color='Gender',
-        color_discrete_map={'Men': '#1f77b4', 'Women': '#e377c2'}
+def plot_gender_boxplot(filtered_df):
+    st.subheader("👩‍🎓 Demographic Spread (Box Plot)")
+    fig = px.box(
+        filtered_df, 
+        y="ShareWomen", 
+        points="all",
+        title="Quartiles & Outliers: Share of Women",
+        color_discrete_sequence=['#9467bd'],
+        hover_data=['Major']
     )
-    fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(yaxis_title="Percentage of Women", xaxis_title="")
+    fig.layout.yaxis.tickformat = ',.0%'
+    st.plotly_chart(fig, use_container_width=True)
+
+def plot_density_heatmap(filtered_df):
+    st.subheader("🔥 Earnings vs Security (Density Heatmap)")
+    fig = px.density_heatmap(
+        filtered_df, 
+        x="Unemployment_rate", 
+        y="Median", 
+        marginal_x="histogram", 
+        marginal_y="histogram",
+        title="Heatmap: Concentration of Majors",
+        color_continuous_scale="Viridis",
+        hover_data=['Major']
+    )
+    fig.update_layout(xaxis_title="Unemployment Rate", yaxis_title="Median Salary ($)")
+    fig.layout.xaxis.tickformat = ',.1%'
     st.plotly_chart(fig, use_container_width=True)
